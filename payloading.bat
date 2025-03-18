@@ -8,4 +8,4 @@ if exist "%TEMP_DIR%" (
 ) else (
     echo Failed!
 )
-exit /b
+exit
